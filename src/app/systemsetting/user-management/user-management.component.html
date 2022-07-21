@@ -1,0 +1,126 @@
+<form nz-form [formGroup]="userSearchForm" *ngIf="isShowFilter" [nzLayout]="'inline'" class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+      <nz-alert nzBanner nzCloseable nzMessage="请填写至少一个查询条件" *ngIf="searchLimitError" class="bannerMessage"></nz-alert>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="20">
+        <p>用户查询</p>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="6">
+        <nz-form-item nzFlex>
+          <nz-form-label>用户姓名</nz-form-label>
+          <nz-form-control>
+            <input nz-input nzRequired placeholder="请输入姓名" [(ngModel)]="filter.Name" formControlName="searchName"
+              name="searchName" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-form-item nzFlex>
+          <nz-form-label>用户电话</nz-form-label>
+          <nz-form-control>
+            <input nz-input placeholder="请输入电话" [(ngModel)]="filter.Phone" formControlName="searchPhone"
+              name="searchPhone" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="6">
+        <nz-form-item nzFlex>
+          <nz-form-label>门店</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-select id="branchId" name="branchId" 
+              formControlName="checkBranch" [(ngModel)]="filter.BranchId"
+              nzPlaceHolder="请选择用户所在门店">
+              <nz-option *ngFor="let item of branchNameList" nzValue="{{item.BranchId}}" nzLabel="{{item.combineName}}">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="5" class="search-filter">
+        <button nz-button [nzType]="'primary'" (click)="searchUser()">查询</button>
+        <button nz-button [nzType]="'primary'" nzGhost (click)="createUser()">新建</button>
+      </div>
+      
+    </div>
+  </form>
+  <br>
+  <br>
+  <nz-table #resultList class="UserList" *ngIf="isShowList" [nzData]="userList" [(nzPageIndex)]="pageIndex"
+    [(nzPageSize)]="pageSize">
+    <thead>
+      <tr>
+        <th>用户姓名</th>
+        <th>电话号码</th>
+        <th>邮箱</th>
+        <th>所在门店</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="searchBody">
+      <tr *ngFor="let item of resultList.data;let i = index">
+        <td>{{item.Username}}</td>
+        <td>{{item.Mobile}}</td>
+        <td>{{item.Email}}</td>
+        <td>{{item.BrandName}} - {{item.BranchName}}</td>
+        <td><a (click)="editUser(item.Id)">编辑</a></td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist" 
+  *ngIf="isShowUserInfo" [formGroup]="validateForm">
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">员工姓名</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入员工姓名">
+      <input nz-input id="userName" formControlName="checkUserName" name="userName"
+        [(ngModel)]="userInfo.Username" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">手机号</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的手机号码">
+      <input nz-input id="UserPhoneNumber" formControlName="checkPhone" name="UserPhoneNumber"
+        [(ngModel)]="userInfo.UserMobile" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">邮箱</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的邮箱">
+      <input nz-input id="UserMail" formControlName="checkMail" name="UserMail"
+        [(ngModel)]="userInfo.UserEmail" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">门店</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择员工所在门店">
+      <nz-select id="branchId" name="branchId" nzMode="multiple"
+        formControlName="checkBranch" [(ngModel)]="userInfo.branchIdArr"
+        nzPlaceHolder="请选择用户所在门店">
+        <nz-option *ngFor="let item of branchNameList" [nzValue]="item.BranchId" [nzLabel]="item.combineName">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">用户组</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择用户组">
+      <nz-select id="userGroupId" name="userGroupId" nzMode="multiple"
+      formControlName="checkUserGroup" [(ngModel)]="userInfo.userGroupIdArr"
+      nzPlaceHolder="请选择用户所在用户组">
+        <nz-option *ngFor="let item of usergroupList" [nzValue]="item.Id" [nzLabel]="item.UserGroupText"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button nzType="default" (click)="deleteUser()" *ngIf="isShowDelete">
+        删除
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="saveUser()">
+        保存
+      </button>
+    </div>
+  </div>
+</form>

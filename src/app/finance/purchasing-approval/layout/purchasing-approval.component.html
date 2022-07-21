@@ -1,0 +1,7 @@
+<nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+  <nz-tab *ngFor="let approvalType of ApprovalTypeList" [nzTitle]="approvalType.Text">
+    <app-car-purchase-approval *ngIf="approvalType.Code === 'CarApproval'"></app-car-purchase-approval>
+    <app-aftersales-purchase-approval *ngIf="approvalType.Code === 'AfterSalesApproval'"></app-aftersales-purchase-approval>
+    <app-derivative-purchase-approval *ngIf="approvalType.Code === 'DerivativeApprove'"></app-derivative-purchase-approval>
+  </nz-tab>
+</nz-tabset>

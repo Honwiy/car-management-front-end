@@ -1,0 +1,143 @@
+<nz-tabset>
+  <ng-container *ngFor="let derivativeCategory of derivativeCategoryList">
+    <nz-tab [nzTitle]="derivativeCategory.categoryText"
+      (nzSelect)="selectCategory(derivativeCategory.id, derivativeCategory.derivativeItemList)">
+      <!-- 精品详情 -->
+      <form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist"
+        [formGroup]="derivativeItemForm" *ngIf="isShowDetailDerivativeItem" (ngSubmit)="submitForm()">
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">商品代码</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入商品代码">
+            <input nz-input id="itemCode" formControlName="checkItemCode" name="itemCode" placeholder="请输入商品代码"
+              [(ngModel)]="derivativeItem.itemCode" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">商品名称</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入商品名称">
+            <input nz-input id="itemText" formControlName="checkItemText" name="itemText" placeholder="请输入商品名称"
+              [(ngModel)]="derivativeItem.itemText" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">商品单位</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入商品单位">
+            <input nz-input id="itemUnit" formControlName="checkItemUnit" name="itemUnit" placeholder="请输入商品单位"
+              [(ngModel)]="derivativeItem.itemUnit" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">商品单价</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入商品单价">
+            <input nz-input id="itemPrice" formControlName="checkItemPrice" name="itemPrice" placeholder="请输入商品单价"
+              [(ngModel)]="derivativeItem.itemPrice" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">商品状态(是否启用)</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择商品状态">
+            <nz-radio-group [(ngModel)]="derivativeItem.status" formControlName="checkItemStatus">
+              <input type="radio" [checked]="derivativeItem.status === 1" (click)="derivativeItem.status = 1" />启用
+              <input type="radio" [checked]="derivativeItem.status === 0" (click)="derivativeItem.status = 0" />禁用
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">创建用户</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12">
+            <input nz-input id="createdBy" name="createdBy" [(ngModel)]="derivativeItem.createdBy"
+              formControlName="checkCreatedBy" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">创建时间</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12">
+            <input nz-input id="createdDate" name="createdDate" [(ngModel)]="derivativeItem.createdDate"
+              formControlName="checkCreatedDate" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">更新用户</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12">
+            <input nz-input id="updatedBy" name="updatedBy" [(ngModel)]="derivativeItem.updatedBy"
+              formControlName="checkUpdatedBy" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired [nzSpan]="5">更新时间</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12">
+            <input nz-input id="updatedDate" name="updatedDate" [(ngModel)]="derivativeItem.updatedDate"
+              formControlName="checkUpdatedDate" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <div nz-row>
+          <div nz-col [nzSpan]="24" class="search-area">
+            <button nz-button [nzType]="'default'" (click)="backToDerivativeList()">
+              返回
+              <i nz-icon nzType="arrow-left"></i>
+            </button>
+            <button nz-button [nzType]="'primary'" [disabled]="!derivativeItemForm.valid"
+              (click)="updateDerivativeList()">
+              保存
+              <i nz-icon nzType="right"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      <!-- 精品列表 -->
+      <div nz-row style="padding: 5px;" *ngIf="isShowDerivativeList">
+        <div nz-col nzSpan="8">
+          <label style="padding-right: 15px;">商品编号:</label>
+          <nz-select nzMode="tags" nzMaxMultipleCount=1 nzShowSearch="true" nzAllowClear="true" nzPlaceHolder="请输入商品编号"
+            [(ngModel)]="childDerivativeCodeList"
+            (ngModelChange)="changeChildDerivativeList(derivativeCategory.derivativeItemList)">
+            <nz-option *ngFor="let codeItem of derivativeCodeList" [nzLabel]="codeItem" [nzValue]="codeItem">
+            </nz-option>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="8">
+          <label style="padding: 0 15px;">商品名称:</label>
+          <nz-select nzMode="tags" nzMaxMultipleCount=1 nzShowSearch="true" nzAllowClear="true" nzPlaceHolder="请输入商品名称"
+            [(ngModel)]="childDerivativeTextList"
+            (ngModelChange)="changeChildDerivativeList(derivativeCategory.derivativeItemList)">
+            <nz-option *ngFor="let textItem of derivativeTextList" [nzLabel]="textItem" [nzValue]="textItem">
+            </nz-option>
+          </nz-select>
+        </div>
+        <div nz-col nzSpan="8" nzPush="4">
+          <button nz-button pull-right nzType="primary" (click)="addNewItem(derivativeCategory.id)">新增商品</button>
+        </div>
+      </div>
+      <nz-table #resultList class="CustomerList" [nzData]="derivativeDetailList" [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize" *ngIf="isShowDerivativeList">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>商品编号</th>
+            <th>商品名称</th>
+            <th>标准售价</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="searchBody">
+          <tr *ngFor="let item of resultList.data">
+            <td>{{item.id}}</td>
+            <td>{{item.itemCode}}</td>
+            <td>{{item.itemText}}</td>
+            <td>{{item.itemPrice}}元/{{item.itemUnit}}</td>
+            <td><a (click)="editApprovalItem(item.id)">查看/编辑</a></td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+  </ng-container>
+</nz-tabset>

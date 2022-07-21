@@ -1,0 +1,158 @@
+<form nz-form [nzLayout]="'inline'">
+  <div nz-row [nzGutter]="24">
+    <nz-form-item nzFlex>
+      <nz-breadcrumb nzSeparator=">" [nzAutoGenerate]="true">
+        <nz-breadcrumb-item>
+          <a (click)="navigateBack()" class="committed-breadcrumb">
+            <i nz-icon nzType="user" nzTheme="outline"></i>
+            <span> 客户信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="car" nzTheme="outline"></i>
+            <span> 车辆信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="insurance" nzTheme="outline"></i>
+            <span> 保险信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled>
+            <i nz-icon nzType="pay-circle" nzTheme="outline"></i>
+            <span> 收款单信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled>
+            <i nz-icon nzType="form" nzTheme="outline"></i>
+            <span> 售后精品信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+
+      </nz-breadcrumb>
+    </nz-form-item>
+  </div>
+</form>
+<br>
+<form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist" [formGroup]="insuranceInfoForm"
+  (ngSubmit)="submitInsuranceInfoForm()">
+  <!--保险公司-->
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="4">保险公司</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="6" nzErrorTip="请选择保险公司">
+      <nz-select nzShowSearch [(ngModel)]="insuranceInfo.insuranceCompany" id="insuranceCorpId" name="insuranceCorp"
+        formControlName="checkInsuranceCorp" nzPlaceHolder="请选择保险公司">
+        <nz-option *ngFor="let item of insuranceCompany" nzValue="{{item.Code}}"
+              nzLabel="{{item.Name}}"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <!--客户类型-->
+    <nz-form-label nzRequired [nzSpan]="4">客户类型</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="8" nzErrorTip="请选择客户类型">
+      <nz-radio-group id="customerTypeId" formControlName="checkCustomerType" placeholder="请选择客户类型" name="customerType"
+        [(ngModel)]="insuranceInfo.customerType">
+        <label nz-radio nzValue="个人客户">个人客户</label>
+        <label nz-radio nzValue="公司客户" style="margin-right: 20px">公司客户</label>
+      </nz-radio-group>
+    </nz-form-control>
+  </nz-form-item>
+  <!--交强险+车船使用税-->
+  <nz-form-item>
+    <nz-form-control [nzOffset]="4" [nzSpan]="4">
+      <label nz-checkbox id="accidentInsId" name="AccidentIns" formControlName="checkAccidentIns"
+        [(ngModel)]="insuranceInfo.accidentIns">交强险+车船使用税</label>
+    </nz-form-control>
+    <!--车损-->
+    <nz-form-control [nzOffset]="2" [nzSpan]="4">
+      <label nz-checkbox id="carDamageInsId" name="CarDamageIns" formControlName="checkCarDamageIns"
+        [(ngModel)]="insuranceInfo.carDamageIns">车损</label>
+    </nz-form-control>
+    <!--盗抢险-->
+    <nz-form-control [nzSpan]="2" [nzOffset]="2" >
+      <label nz-checkbox id="stolenInsId" name="StolenIns" formControlName="checkStolenIns"
+        [(ngModel)]="insuranceInfo.stolenIns">盗抢险</label>
+    </nz-form-control>
+  </nz-form-item>
+  <!--三者-->
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="4">三者险</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="6" nzErrorTip="请选择保额">
+      <nz-select [(ngModel)]="insuranceInfo.thirdPartyIns" id="thirdPartyAmount" name="thirdPartyAmount"
+        formControlName="checkThirdPartyAmount" nzPlaceHolder="请选择保额">
+        <nz-option nzValue="无" nzLabel="无"></nz-option>
+        <nz-option nzValue="10万" nzLabel="10万"></nz-option>
+        <nz-option nzValue="30万" nzLabel="30万"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <!--司机险-->
+    <nz-form-label nzRequired [nzSpan]="4">司机险</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="6" nzErrorTip="请选择保额">
+      <nz-select [(ngModel)]="insuranceInfo.driverIns" id="driverInsAmount" name="driverInsAmount"
+        formControlName="checkDriverInsAmount" nzPlaceHolder="请选择保额">
+        <nz-option nzValue="无" nzLabel="无"></nz-option>
+        <nz-option nzValue="10万" nzLabel="10万"></nz-option>
+        <nz-option nzValue="30万" nzLabel="30万"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <!--乘客险-->
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="4">乘客险</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="6" nzErrorTip="请选择保额">
+      <nz-select [(ngModel)]="insuranceInfo.passengerIns" id="passengerInsAmount" name="passengerInsAmount"
+        formControlName="checkPassengerInsAmount" nzPlaceHolder="请选择保额">
+        <nz-option nzValue="无" nzLabel="无"></nz-option>
+        <nz-option nzValue="10万" nzLabel="10万"></nz-option>
+        <nz-option nzValue="30万" nzLabel="30万"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <!--玻璃险-->
+    <nz-form-control [nzOffset]="2" [nzSpan]="4">
+      <label nz-checkbox id="glassInsId" name="GlassIns" formControlName="checkGlassIns"
+        [(ngModel)]="insuranceInfo.glassIns">玻璃险：国产</label>
+    </nz-form-control>
+    <!--划痕险-->
+    <nz-form-control [nzSpan]="2" style="margin-left: 1.666667%">
+      <label nz-checkbox id="scratchInsId" name="ScratchIns" formControlName="checkScratchIns"
+        [(ngModel)]="insuranceInfo.scratchIns">划痕险</label>
+    </nz-form-control>
+  </nz-form-item>
+  <!--自燃险-->
+  <nz-form-item>
+    <nz-form-control [nzOffset]="4" [nzSpan]="4">
+      <label nz-checkbox id="fireInsId" name="FireIns" formControlName="checkFireIns"
+        [(ngModel)]="insuranceInfo.fireIns">自燃险</label>
+    </nz-form-control>
+
+    <nz-form-control [nzOffset]="2" [nzSpan]="4">
+      <label nz-checkbox id="waterInsId" name="WaterIns" formControlName="checkWaterIns"
+        [(ngModel)]="insuranceInfo.waterIns">发动机涉水险</label>
+    </nz-form-control>
+
+    <nz-form-control [nzOffset]="2" [nzSpan]="4">
+      <label nz-checkbox id="findThirdPartyInsId" name="FindThirdPartyIns" formControlName="checkFindThirdPartyIns"
+        [(ngModel)]="insuranceInfo.findThirdPartyIns">找不到第三方</label>
+    </nz-form-control>
+  </nz-form-item>
+  <!--涉水险-->
+  <nz-form-item>
+  </nz-form-item>
+  <!--找不到第三方-->
+  <nz-form-item>
+  </nz-form-item>
+
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'default'" (click)="backToPrev()">
+        返回上一页
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="confirmToNext()">
+        确认
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,24 @@
+<div class="home" style="background-image: url(../../../assets/images/background.png)">
+  <form nz-form [formGroup]="validateForm" class="login-form">
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入用户名">
+        <nz-input-group nzPrefixIcon="user">
+          <input type="text" [(ngModel)]="loginInfo.Email" nz-input formControlName="userName" placeholder="Username" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入密码">
+        <nz-input-group nzPrefixIcon="lock">
+          <input type="password" [(ngModel)]="loginInfo.Password" nz-input formControlName="password" placeholder="Password" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <a class="login-form-forgot">忘记密码?</a>
+        <button nz-button class="login-form-button" [nzType]="'primary'" (click)="submitForm(loginInfo)">登录</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>

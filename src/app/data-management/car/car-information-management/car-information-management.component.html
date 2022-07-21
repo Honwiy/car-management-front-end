@@ -1,0 +1,39 @@
+<p>This is a component to manage car basic information</p>
+<form nz-form [nzLayout]="'inline'" class="ant-advanced-search-form">
+  <h3>车辆基础信息管理</h3>
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+    <nz-tab *ngFor="let carDropdownItem of carDropdownList" [nzTitle]="carDropdownItem.PropertyText">
+      <nz-table
+      #rowSelectionTable
+      [nzData]="listOfAllData"
+      (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    >
+      <thead>
+        <tr>
+          <th
+            nzShowCheckbox
+            [(nzChecked)]="isAllDisplayDataChecked"
+            [nzIndeterminate]="isIndeterminate"
+            (nzCheckedChange)="checkAll($event)"
+          ></th>
+          <th>代码</th>
+          <th>名称</th>
+          <th>是否启用</th>
+          <th>创建人员</th>
+          <th>创建时间</th>
+          <th>更新人员</th>
+          <th>更新时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rowSelectionTable.data">
+          <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="toggleCarInfoItem()"></td>
+          <td>{{ data.name }}</td>
+          <td>{{ data.age }}</td>
+          <td>{{ data.address }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+    </nz-tab>
+  </nz-tabset>
+</form>

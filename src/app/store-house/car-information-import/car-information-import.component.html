@@ -1,0 +1,16 @@
+
+  <nz-tabset>
+    <nz-tab nzTitle="奇瑞" (nzSelect)="carInfoImportType='cherryPurchaseOrdering'">
+      <nz-radio-group [(ngModel)]="carInfoImportType" (ngModelChange)="changeFileUploadType($event)">
+        <label nz-radio nzValue="cherryPurchaseOrdering">奇瑞车辆采购信息录入</label>
+        <label nz-radio nzValue="cherryInStoreHouse">奇瑞车辆到库信息录入</label>
+      </nz-radio-group>
+    </nz-tab>
+    <nz-tab nzTitle="比亚迪" (nzSelect)="carInfoImportType='bydPurchaseOrdering'">
+      <nz-radio-group [(ngModel)]="carInfoImportType" (ngModelChange)="changeFileUploadType($event)">
+        <label nz-radio nzValue="bydPurchaseOrdering">比亚迪车辆采购信息录入</label>
+        <label nz-radio nzValue="bydInStoreHouse">比亚迪车辆到库信息录入</label>
+      </nz-radio-group>
+    </nz-tab>
+  </nz-tabset>
+  <app-uploader *ngIf="carInfoImportType" [uploadType]="carInfoImportType" (uploadStatus)="switchSpinning($event)"></app-uploader>

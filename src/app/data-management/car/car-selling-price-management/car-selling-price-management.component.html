@@ -1,0 +1,73 @@
+<p>This is a component to manage car standard selling price</p>
+<form nz-form [formGroup]="carInfoSearchForm" [nzLayout]="'inline'" class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <nz-alert nzBanner nzCloseable nzMessage="请选择所有选项" *ngIf="searchLimitedError" class="bannerMessage"></nz-alert>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="22">
+      <p>车辆类型检索</p>
+    </div>
+    <div nz-col [nzSpan]="2">
+      <a class="collapse" (click)="toggleCollapse()">
+        展开
+        <i nz-icon [nzType]="show?'up':'down'"></i>
+      </a>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24" [hidden]="!show">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>品牌</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select
+            id="carBrandId"
+            name="carBrand"
+            formControlName="searchCarBrand"
+            [(ngModel)]="carSearchFilter.carBrand"
+            nzPlaceHolder="请选择车系"
+            (ngModelChange)="carBrandChange($event)">
+              <nz-option *ngFor="let item of carBrandDropdownList" nzValue="{{item.PropertyItemCode}}" nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>车系</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select
+            id="carSeriesId"
+            name="carSeries"
+            formControlName="searchCarSeries"
+            [(ngModel)]="carSearchFilter.carSeries"
+            nzPlaceHolder="请选择车系"
+            (ngModelChange)="carSeriesChange($event)">
+              <nz-option *ngFor="let item of carSeriesDropdownList" nzValue="{{item.PropertyItemCode}}" nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>车型</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select
+            id="carTypeId"
+            name="carType"
+            formControlName="searchCarType"
+            [(ngModel)]="carSearchFilter.carType"
+            (ngModelChange)="carTypeChange($event)"
+            nzPlaceHolder="请选择车型">
+              <nz-option *ngFor="let item of carTypeDropdownList" nzValue="{{item.PropertyItemCode}}" nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area" [hidden]="!show">
+      <button nz-button [nzType]="'primary'" (click)="searchOnSaleCarList()">查询</button>
+      <button nz-button>清空</button>
+    </div>
+  </div>
+</form><br>

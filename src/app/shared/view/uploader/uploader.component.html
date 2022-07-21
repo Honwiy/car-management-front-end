@@ -1,0 +1,15 @@
+<nz-upload nzType="drag" [nzDisabled]="fileList.length !== 0" [(nzFileList)]="fileList" [nzLimit]=1 [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
+  <p class="ant-upload-drag-icon">
+    <i nz-icon nzType="inbox"></i>
+  </p>
+  <p class="ant-upload-text">点击或拖拽文件到该区域进行上传操作</p>
+  <p class="ant-upload-hint">
+    <!-- 注意事项 -->
+  </p>
+</nz-upload>
+<button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+  [disabled]="fileList.length == 0" style="margin-top: 16px">
+  {{ uploading ? '上传中' : '上传文件' }}
+</button>
+
+<!-- <input type="file" accept=".csv,.txt" (change)="openFile($event)"> -->

@@ -1,0 +1,273 @@
+<form nz-form *ngIf="searchPurchaseApprovalForm" [formGroup]="searchPurchaseApprovalForm" [nzLayout]="'inline'"
+  class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>品牌</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12">
+          <nz-select nzShowSearch id="brandId" name="brandName" formControlName="brand"
+            [(ngModel)]="searchPurchaseApproval.brand" [nzFilterOption]="nzFilterOption" nzAllowClear
+            nzPlaceHolder="请选择品牌" [nzAllowClear]=false>
+            <nz-option *ngFor="let item of brandDropDown" nzValue="{{item.Code}}" nzLabel="{{item.Name}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>起始日期</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12">
+          <nz-date-picker formControlName="startTime" nzPlaceHolder="请选择起始日期" nzFormat="yyyy-MM-dd HH:mm:ss" nzShowTime
+            [(ngModel)]="searchPurchaseApproval.startTime"
+            (ngModelChange)="changeDateTime($event, 'purchaseOrderingStartTime')" [nzAllowClear]=false></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8">
+      <nz-form-item nzFlex>
+        <nz-form-label>终止日期</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12">
+          <nz-date-picker formControlName="endTime" nzPlaceHolder="请选择终止日期" nzFormat="yyyy-MM-dd HH:mm:ss" nzShowTime
+            [(ngModel)]="searchPurchaseApproval.endTime"
+            (ngModelChange)="changeDateTime($event, 'purchaseOrderingEndTime')" [nzAllowClear]=false></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="22" class="search-area">
+      <button nz-button [nzType]="'primary'" (click)="searchApprovalList()">查询</button>
+      <button nz-button [nzType]="'primary'" (click)="clearApprovalItem()">清空</button>
+    </div>
+  </div>
+</form>
+<br>
+<!-- Approval Detail Form -->
+<form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist"
+  [formGroup]="carPurchaseOrderingForm" *ngIf="isShowPurchaseOrderingDetail" (ngSubmit)="submitForm()">
+  <div nz-row>
+    <div nz-col [nzSpan]="24">
+      <a class="collapse" (click)="toggleCollapse('carItem')">
+        采购信息
+        <i nz-icon [nzType]="isShowPurchaseOrderingItem?'down':'right'"></i>
+      </a>
+    </div>
+  </div>
+  <!-- 采购信息 -->
+  <div *ngIf="isShowPurchaseOrderingItem">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5">订单唯一码</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12">
+        <input nz-input id="purchaseOrderingCode" formControlName="checkOrderingCode" name="purchaseOrderingCode"
+          [(ngModel)]="carPurchaseOrderingItem.purchaseOrderingCode" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--品牌-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">品牌</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择品牌">
+        <input nz-input id="brandId" name="brand" formControlName="checkBrand"
+          [(ngModel)]="carPurchaseOrderingItem.brand" nzPlaceHolder="请选择品牌"/>
+      </nz-form-control>
+    </nz-form-item>
+    <!--车系-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车系</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车系">
+        <input nz-input id="seriesId" name="series" formControlName="checkSeries"
+          [(ngModel)]="carPurchaseOrderingItem.carseries" nzAllowClear nzPlaceHolder="请选择车系" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车型-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车型</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车型">
+        <input nz-input id="typeId" name="type" formControlName="checkType"
+          [(ngModel)]="carPurchaseOrderingItem.cartype" nzAllowClear nzPlaceHolder="请选择车型" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车型分类-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车型分类</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车型类别">
+        <input nz-input id="typeCodeId" name="typeCode" formControlName="checkTypeCode"
+          [(ngModel)]="carPurchaseOrderingItem.carPropertyItemMapping.carPropertyItemList.carTypeCode" nzAllowClear nzPlaceHolder="请选择车型类别" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车辆型号-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车辆型号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车辆型号">
+        <input nz-input id="typeCategoryId" name="typeCategory" formControlName="checkTypeCategory"
+          [(ngModel)]="carPurchaseOrderingItem.cartypecategory" nzAllowClear nzPlaceHolder="请选择车辆型号" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车身颜色-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车身颜色</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车身颜色">
+        <input nz-input id="colorId" name="color" formControlName="checkColor"
+          [(ngModel)]="carPurchaseOrderingItem.carcolor" nzPlaceHolder="请选择车身颜色" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--波箱方式-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">波箱方式</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入波箱方式">
+        <input nz-input id="transmission" formControlName="checkGearboxType" name="transmission" placeholder="请输入波箱方式"
+          [(ngModel)]="carPurchaseOrderingItem.transmission" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--订购日期-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">订购日期</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="4" nzErrorTip="请选择订购日期">
+        <nz-date-picker nzFormat="yyyy-MM-dd HH:mm:ss" nzShowTime formControlName="checkPurchaseOrderingDate"
+          nzPlaceHolder="请选择订购日期" [(ngModel)]="carPurchaseOrderingItem.purchaseOrderingDate" nzDisabled
+          (ngModelChange)="changeDateTime($event, 'purchaseOrderingDate')" [nzAllowClear]=false></nz-date-picker>
+      </nz-form-control>
+
+      <nz-form-label nzRequired [nzSpan]="3" style="margin-left:1.8rem">计划日期</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="8" nzErrorTip="请选择计划日期">
+        <nz-date-picker nzFormat="yyyy-MM-dd HH:mm:ss" nzShowTime formControlName="checkPlanningDate"
+          nzPlaceHolder="请选择计划日期" [(ngModel)]="carPurchaseOrderingItem.purchaseOrderingPlanningDate" nzDisabled
+          (ngModelChange)="changeDateTime($event, 'planningDate')" [nzAllowClear]=false></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">采购数量</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入采购数量">
+        <input nz-input id="purchaseOrderingCount" type="number" formControlName="checkPurchaseOrderingCount"
+          placeholder="请输入采购数量" name="purchaseOrderingCount"
+          [(ngModel)]="carPurchaseOrderingItem.purchaseOrderingCount" />
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+  <hr style="height:1px;border:none;border-top:1px dotted #555555;" />
+  <div nz-row>
+    <div nz-col [nzSpan]="24">
+      <a class="collapse" (click)="toggleCollapse('financeApprovedItem')">
+        财务信息
+        <i nz-icon [nzType]="isShowFinanceApprovalItem?'down':'right'"></i>
+      </a>
+    </div>
+  </div>
+  <!-- 采购信息 -->
+  <div *ngIf="isShowFinanceApprovalItem">
+    <!-- 车辆起价 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车辆起价</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入车辆起价">
+        <input nz-input id="startPrice" formControlName="checkStartPrice" name="startPrice" placeholder="请输入车辆起价"
+          [(ngModel)]="carPurchaseOrderingItem.startPrice" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 总金额 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">总金额</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入总金额">
+        <input nz-input id="totalPrice" type="number" formControlName="checkTotalPrice" placeholder="请输入总金额"
+          name="totalPrice" [(ngModel)]="carPurchaseOrderingItem.totalPrice" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--付款类型-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">付款类型</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择付款类型">
+        <nz-select id="paymentType" name="paymentType" formControlName="checkPaymentType"
+          [(ngModel)]="carPurchaseOrderingItem.paymentType" nzAllowClear nzPlaceHolder="请选择付款类型" [nzAllowClear]=false>
+          <nz-option *ngFor="let item of paymentTypeDropDown" nzValue="{{item.Code}}" nzLabel="{{item.Name}}">
+          </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 汇票号 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">汇票号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入汇票号">
+        <input nz-input id="billingNumber" type="billingNumber" formControlName="checkBillingNumber"
+          placeholder="请输入汇票号" name="billingNumber" [(ngModel)]="carPurchaseOrderingItem.billingNumber" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--合作银行-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">合作银行</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择合作银行">
+        <nz-select id="cooperationBank" name="cooperationBank" formControlName="checkCooperationBank"
+          [(ngModel)]="carPurchaseOrderingItem.cooperationBank" nzAllowClear nzPlaceHolder="请选择合作银行"
+          [nzAllowClear]=false>
+          <nz-option *ngFor="let item of cooperationBankDropDown" nzValue="{{item.Code}}" nzLabel="{{item.Name}}">
+          </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 汇票金额 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">汇票金额</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="5" nzErrorTip="请输入汇票金额">
+        <input nz-input id="billingPrice" type="billingPrice" formControlName="checkBillingPrice" placeholder="请输入汇票金额"
+          name="billingPrice" [(ngModel)]="carPurchaseOrderingItem.billingPrice" />
+      </nz-form-control>
+      <nz-form-label nzRequired [nzSpan]="3">汇票到期日期</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="9" nzErrorTip="请选择汇票到期日期">
+        <nz-date-picker nzFormat="yyyy-MM-dd HH:mm:ss" nzShowTime formControlName="checkBillingEndDate"
+          nzPlaceHolder="请选择汇票到期日期" [(ngModel)]="carPurchaseOrderingItem.billingEndDate" [nzAllowClear]=false>
+        </nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <!--汇票到期日期-->
+    <!-- <nz-form-item>
+      
+    </nz-form-item> -->
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'default'" (click)="backToApprovedList()">
+        返回
+        <i nz-icon nzType="arrow-left"></i>
+      </button>
+      <button nz-button [nzType]="'primary'" [disabled]="!carPurchaseOrderingForm.valid"
+        (click)="approvedPurchaseOrdering()">
+        通过审批
+        <i nz-icon nzType="right"></i>
+      </button>
+    </div>
+  </div>
+</form>
+<br>
+
+<nz-table #resultList class="CustomerList" *ngIf="isShowSearchList" 
+  [nzData]="carPurchaseOrderingApprovalList"
+  [(nzPageIndex)]="pageIndex" 
+  [(nzPageSize)]="pageSize">
+  <thead>
+    <tr>
+      <!-- <th>审批编号</th> -->
+      <th>品牌</th>
+      <th>型号</th>
+      <th>类型</th>
+      <th>颜色</th>
+      <th>采购数量</th>
+      <th>申请人</th>
+      <th>申请时间</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody class="searchBody">
+    <tr *ngFor="let item of resultList.data;let i = index">
+      <!-- <td>{{item.purchaseOrderingCode}}</td> -->
+      <td>{{item.carPropertyItemMapping.carPropertyItemList.brand | generalOptionValue:'Car':'BRAND'}}</td>
+      <td>{{item.carPropertyItemMapping.carPropertyItemList.carSeries | generalOptionValue: 'Car': 'CARSERIES'}}</td>
+      <td>{{item.carPropertyItemMapping.carPropertyItemList.carType | generalOptionValue: 'Car': 'CARTYPE'}}</td>
+      <td>{{item.carPropertyItemMapping.carPropertyItemList.carColor | generalOptionValue: 'Car': 'CARCOLOR'}}</td>
+      <td>{{item.purchaseOrderingCount}}</td>
+      <td>{{item.createdBy}}</td>
+      <td>{{item.createdDate}}</td>
+      <td><a (click)="editApprovalItem(i)">查看/编辑</a></td>
+      <td><a (click)="rejectApprovalItem(i)">拒绝申请</a></td>
+    </tr>
+  </tbody>
+</nz-table>

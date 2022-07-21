@@ -1,0 +1,125 @@
+<form nz-form [formGroup]="customerSearchForm" [nzLayout]="'inline'" class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <nz-alert nzBanner nzCloseable nzMessage="请填写至少两个查询条件" *ngIf="searchLimitedError" class="bannerMessage"></nz-alert>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="20">
+      <p>查询客户信息</p>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="8" [hidden]="!show">
+      <nz-form-item nzFlex>
+        <nz-form-label>客户姓名</nz-form-label>
+        <nz-form-control>
+          <input nz-input nzRequired placeholder="请输入姓名" [(ngModel)]="filter.Name" formControlName="searchName"
+            name="searchcustomer" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8" [hidden]="!show">
+      <nz-form-item nzFlex>
+        <nz-form-label>客户电话</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入电话" [(ngModel)]="filter.CustomerPhoneNumber" formControlName="searchPhone"
+            name="searchphone" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="8" [hidden]="!show">
+      <nz-form-item nzFlex>
+        <nz-form-label>客户身份证号</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入身份证号" [(ngModel)]="filter.IdentityCard" formControlName="searchCard"
+            name="searchcard" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [hidden]="!show">
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'primary'" (click)="searchCustomer()">查询</button>
+      <button nz-button (click)="resetForm()">清空</button>
+    </div>
+  </div>
+</form>
+<br>
+<form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist" *ngIf="isShowDetail"
+  [formGroup]="validateForm" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">客户编号</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12">
+      <input nz-input id="customerNumber" formControlName="checkCustomerNum" name="customerNumber"
+        [(ngModel)]="customer.CustomerNumber" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">客户姓名</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入客户姓名">
+      <input nz-input id="customerName" formControlName="checkCustomerName" name="customerName"
+        [(ngModel)]="customer.Name" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">身份证号</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的身份证号码">
+      <input nz-input id="identityCard" formControlName="checkIdentityCard" name="identityCard"
+        [(ngModel)]="customer.IdentityCard" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">手机号</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的手机号码">
+      <input nz-input id="CustomerPhoneNumber" formControlName="checkPhone" name="CustomerPhoneNumber"
+        [(ngModel)]="customer.CustomerPhoneNumber" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">常住行政区</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择客户常住行政区">
+      <nz-select id="districtId" name="districtId" formControlName="checkDistrict" [(ngModel)]="customer.DistrictId"
+        nzAllowClear nzPlaceHolder="Choose">
+        <nz-option *ngFor="let item of districtList" [nzValue]="item.Id" [nzLabel]="item.Name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzRequired [nzSpan]="5">客户来源</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择客户客户来源">
+      <nz-select id="customerSourceId" name="customerSourceId" formControlName="checkCustomerSource"
+        [(ngModel)]="customer.CustomerSourceId" nzAllowClear nzPlaceHolder="Choose">
+        <nz-option *ngFor="let item of customerSourceList" [nzValue]="item.Id" [nzLabel]="item.Name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'primary'" (click)="saveCustomer()">
+        更新
+        <i nz-icon nzType="right"></i>
+      </button>
+    </div>
+  </div>
+</form>
+<br>
+<nz-table #resultList class="CustomerList" *ngIf="isShowList" [nzData]="customerList" [(nzPageIndex)]="pageIndex"
+  [(nzPageSize)]="pageSize">
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>客户姓名</th>
+      <th>客户电话</th>
+      <th>客户身份证号</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody class="searchBody">
+    <tr *ngFor="let item of resultList.data;let i = index">
+      <td>{{item.CustomerNumber}}</td>
+      <td>{{item.Name}}</td>
+      <td>{{item.CustomerPhoneNumber}}</td>
+      <td>{{item.IdentityCard}}</td>
+      <td><a (click)="editCustomer(i)">编辑</a></td>
+    </tr>
+  </tbody>
+</nz-table>

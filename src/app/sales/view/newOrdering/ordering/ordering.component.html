@@ -1,0 +1,341 @@
+<form nz-form [nzLayout]="'inline'">
+  <div nz-row [nzGutter]="24">
+    <nz-form-item nzFlex>
+      <nz-breadcrumb nzSeparator=">" [nzAutoGenerate]="true">
+        <nz-breadcrumb-item>
+          <a (click)="navigateBack()" class="committed-breadcrumb">
+            <i nz-icon nzType="user" nzTheme="outline"></i>
+            <span> 客户信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="car" nzTheme="outline"></i>
+            <span> 车辆信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="insurance" nzTheme="outline"></i>
+            <span> 保险信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="pay-circle" nzTheme="outline"></i>
+            <span> 收款单信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled>
+            <i nz-icon nzType="form" nzTheme="outline"></i>
+            <span> 售后精品信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+
+      </nz-breadcrumb>
+    </nz-form-item>
+  </div>
+</form>
+<br>
+<!-- 收银款项表单 -->
+<form [formGroup]="priceListForm" class="ant-advanced-search-form">
+  <div class="form-group formtitle">
+    <h4>车款项目</h4>
+    <hr>
+  </div>
+  <div class="form-group">
+    <div nz-row nzType="flex" nzJustify="space-around">
+      <div nz-col nzSpan="4">付款项目</div>
+      <div nz-col nzSpan="4">金额</div>
+      <div nz-col nzSpan="4">付款方式</div>
+      <div nz-col nzSpan="4">备注</div>
+    </div>
+  </div>
+  <div class="gutter-example">
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>订金</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="orderPrice" formControlName="orderPrice" nzSize="default" [(ngModel)]="orderingCar.orderPrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="orderPaidWay" formControlName="orderPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.orderPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" formControlName="orderPriceComment" name="orderPriceComment" nzSize="default" [(ngModel)]="orderingCar.orderPriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>首付款</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="firstPaid" formControlName="firstPaid" nzSize="default" [(ngModel)]="orderingCar.firstPaid" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="firstPaidWay" formControlName="firstPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.firstPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="firstPaidComment" formControlName="firstPaidComment" nzSize="default" [(ngModel)]="orderingCar.firstPaidComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>车款</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="carPrice" formControlName="carPrice" nzSize="default" [(ngModel)]="orderingCar.carPrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="carPricePaidWay" formControlName="carPricePaidWay"  style="width: 120px;" [(ngModel)]="orderingCar.carPricePaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="carPriceComment" formControlName="carPriceComment"  nzSize="default" [(ngModel)]="orderingCar.carPriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>欠款</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="arrearPaidPrice" formControlName="arrearPaidPrice" nzSize="default" [(ngModel)]="orderingCar.arrearPaidPrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="arrearPaidWay" formControlName="arrearPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.arrearPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="arrearPaidPriceComment" formControlName="arrearPaidPriceComment" nzSize="default"
+          [(ngModel)]="orderingCar.arrearPaidPriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <label style="font-weight: bold;">总车价</label>
+      </div>
+      <div nz-col nzOffset="12" nzSpan="4">
+        <label for="totalCarPrice" style="font-weight: bold;">111000</label>
+      </div>
+    </div>
+    <div class="form-group formtitle">
+    <h4>代办项目</h4>
+    <hr>
+  </div>
+  <div class="form-group">
+    <div nz-row nzType="flex" nzJustify="space-around">
+      <div nz-col nzSpan="4">付款项目</div>
+      <div nz-col nzSpan="4">金额</div>
+      <div nz-col nzSpan="4">付款方式</div>
+      <div nz-col nzSpan="4">备注</div>
+    </div>
+  </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>居间服务费</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="serviceCharge" formControlName="serviceCharge" nzSize="default" [(ngModel)]="orderingCar.serviceCharge" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="serviceChargePaidWay" formControlName="serviceChargePaidWay"  style="width: 120px;" [(ngModel)]="orderingCar.serviceChargePaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="serviceChargeComment" formControlName="serviceChargeComment"  nzSize="default"
+          [(ngModel)]="orderingCar.serviceChargeComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>精品销售</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="derivativePrice" formControlName="derivativePrice" nzSize="default" [(ngModel)]="orderingCar.derivativePrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="derivativePaidWay" formControlName="derivativePaidWay" style="width: 120px;" [(ngModel)]="orderingCar.derivativePaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="derivativePriceComment" formControlName="derivativePriceComment" nzSize="default"
+          [(ngModel)]="orderingCar.derivativePriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>代办上牌</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="agentLicensePrice" formControlName="agentLicensePrice" nzSize="default" [(ngModel)]="orderingCar.agentLicensePrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="agentLicensePaidWay" formControlName="agentLicensePaidWay" style="width: 120px;" [(ngModel)]="orderingCar.agentLicensePaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="agentLicensePriceComment" formControlName="agentLicensePriceComment" nzSize="default"
+          [(ngModel)]="orderingCar.agentLicensePriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>代理缴纳购置税</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="agentTaxPrice" formControlName="agentTaxPrice" nzSize="default" [(ngModel)]="orderingCar.agentTaxPrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="agentTaxPaidWay" formControlName="agentTaxPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.agentTaxPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="agentTaxPriceComment" formControlName="agentTaxPriceComment" nzSize="default"
+          [(ngModel)]="orderingCar.agentTaxPriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>代办大绿本抵押</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="agentGreenBookPrice" formControlName="agentGreenBookPrice" nzSize="default" [(ngModel)]="orderingCar.agentGreenBookPrice" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="agentGreenBookPaidWay" formControlName="agentGreenBookPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.agentGreenBookPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="agentGreenBookPriceComment" formControlName="agentGreenBookPriceComment" nzSize="default"
+          [(ngModel)]="orderingCar.agentGreenBookPriceComment" />
+      </div>
+    </div>
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="4">
+        <span>大绿本押金</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input name="greenBookDeposit" formControlName="greenBookDeposit" nzSize="default" [(ngModel)]="orderingCar.greenBookDeposit" />
+      </div>
+      <div nz-col nzSpan="4">
+        <nz-select name="greenBookDepositPaidWay" formControlName="greenBookDepositPaidWay" style="width: 120px;" [(ngModel)]="orderingCar.greenBookDepositPaidWay">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="greenBookDepositComment" formControlName="greenBookDepositComment" nzSize="default"
+          [(ngModel)]="orderingCar.greenBookDepositComment" />
+      </div>
+    </div>
+  </div>
+</form>
+<br>
+<!-- 衍生售后款项表单 -->
+<form class="ant-advanced-search-form" *ngIf="orderingCar.salesType==='wholeSale'">
+  <div class="form-group formtitle">
+    <h4>赠送项目</h4>
+    <hr>
+  </div>
+  <div class="form-group">
+    <div nz-row nzType="flex" nzJustify="space-around">
+      <div nz-col nzSpan="2" class="formsubtitle">类别</div>
+      <div nz-col nzSpan="2" class="formsubtitle">赠送方式</div>
+      <div nz-col nzSpan="3" class="formsubtitle">项目名称</div>
+      <div nz-col nzSpan="2" class="formsubtitle">赠送/购买</div>
+      <div nz-col nzSpan="2" class="formsubtitle">数量</div>
+      <div nz-col nzSpan="3" class="formsubtitle">金额</div>
+      <div nz-col nzSpan="3" class="formsubtitle">付款方式</div>
+      <div nz-col nzSpan="2" class="formsubtitle">备注</div>
+      <div nz-col nzSpan="1" class="formsubtitle"></div>
+    </div>
+  </div>
+  <div class="gutter-example" *ngFor="let present of presentList;let i=index">
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="2">
+        <h4>精品</h4>
+      </div>
+      <div nz-col nzSpan="3">
+        <nz-select name="presentName" [(ngModel)]="present.name" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of presentNameList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2">
+        <nz-select name="isFree" [(ngModel)]="present.isFree" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of isFreeOption" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2">
+        <nz-input-number name="presentAmount" [(ngModel)]="present.presentNumber" [nzMin]="0" [nzStep]="1">
+        </nz-input-number>
+      </div>
+      <div nz-col nzSpan="3">
+        <input nz-input type="text" name="present.presentPrice" nzSize="default" />
+      </div>
+      <div nz-col nzSpan="3">
+        <nz-select name="presentPaidWay" [(ngModel)]="present.presentPaidWay" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="presentPaidComment" nzSize="default" [(ngModel)]="present.presentComment" />
+      </div>
+      <div nz-col nzSpan="1">
+        <i nz-icon nzType="plus-circle" nzTheme="outline" class="addbutton" (click)="addField($event)"></i>
+        &nbsp;&nbsp;&nbsp;
+        <i nz-icon nzType="minus-circle" nzTheme="outline" class="deletebutton" (click)="removeField(i)"></i>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="gutter-example" *ngFor="let present of presentList;let i=index">
+    <div nz-row nzType="flex" nzJustify="space-around" class="payrow">
+      <div nz-col nzSpan="2">
+        <h4>售后</h4>
+      </div>
+      <div nz-col nzSpan="3">
+        <nz-select name="presentName" [(ngModel)]="present.name" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of presentNameList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2">
+        <nz-select name="isFree" [(ngModel)]="present.isFree" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of isFreeOption" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2">
+        <nz-input-number name="presentAmount" [(ngModel)]="present.presentNumber" [nzMin]="0" [nzStep]="1">
+        </nz-input-number>
+      </div>
+      <div nz-col nzSpan="3">
+        <input nz-input type="text" name="present.presentPrice" nzSize="default" />
+      </div>
+      <div nz-col nzSpan="3">
+        <nz-select name="presentPaidWay" [(ngModel)]="present.presentPaidWay" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let item of paidWayList" [nzValue]="item.Code" nzLabel="{{item.Name}}"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="4">
+        <input nz-input type="text" name="presentPaidComment" nzSize="default" [(ngModel)]="present.presentComment" />
+      </div>
+      <div nz-col nzSpan="1">
+        <i nz-icon nzType="plus-circle" nzTheme="outline" class="addbutton" (click)="addField($event)"></i>
+        &nbsp;&nbsp;&nbsp;
+        <i nz-icon nzType="minus-circle" nzTheme="outline" class="deletebutton" (click)="removeField(i)"></i>
+      </div>
+    </div>
+  </div>
+
+</form>

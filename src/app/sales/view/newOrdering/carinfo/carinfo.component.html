@@ -1,0 +1,287 @@
+<form nz-form [nzLayout]="'inline'">
+  <div nz-row [nzGutter]="24">
+    <nz-form-item nzFlex>
+      <nz-breadcrumb nzSeparator=">" [nzAutoGenerate]="true">
+        <nz-breadcrumb-item>
+          <a (click)="navigateBack()" class="committed-breadcrumb">
+            <i nz-icon nzType="user" nzTheme="outline"></i>
+            <span> 客户信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          <a disabled style="color: #2196F3;">
+            <i nz-icon nzType="car" nzTheme="outline"></i>
+            <span> 车辆信息录入</span>
+          </a>
+        </nz-breadcrumb-item>
+        <ng-container *ngIf="orderingCar.salesType==='wholeSale'">
+          <nz-breadcrumb-item>
+            <a disabled>
+              <i nz-icon nzType="insurance" nzTheme="outline"></i>
+              <span> 保险信息录入</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a disabled>
+              <i nz-icon nzType="pay-circle" nzTheme="outline"></i>
+              <span> 收款单信息录入</span>
+            </a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a disabled>
+              <i nz-icon nzType="form" nzTheme="outline"></i>
+              <span> 售后精品信息录入</span>
+            </a>
+          </nz-breadcrumb-item>
+        </ng-container>
+      </nz-breadcrumb>
+    </nz-form-item>
+  </div>
+</form>
+<br>
+<form nz-form [formGroup]="carInfoSearchForm" [nzLayout]="'inline'" class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="22">
+      <p>车辆检索</p>
+    </div>
+    <div nz-col [nzSpan]="2">
+      <a class="collapse" (click)="toggleCollapse()">
+        展开
+        <i nz-icon [nzType]="show?'up':'down'"></i>
+      </a>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24" [hidden]="!show">
+    <div nz-col [nzSpan]="10">
+      <nz-form-item nzFlex>
+        <nz-form-label>车系</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select id="carSeriesId" name="carSeries" formControlName="searchCarSeries"
+            [(ngModel)]="carSearchFilter.carSeries" nzPlaceHolder="请选择车系" (ngModelChange)="carSeriesChange($event)">
+            <nz-option *ngFor="let item of carSeriesDropdownList" nzValue="{{item.PropertyItemCode}}"
+              nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="12">
+      <nz-form-item nzFlex>
+        <nz-form-label>车型</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select id="carTypeId" name="carType" formControlName="searchCarType" [(ngModel)]="carSearchFilter.carType"
+            (ngModelChange)="carTypeChange($event)" nzPlaceHolder="请选择车型">
+            <nz-option *ngFor="let item of carTypeDropdownList" nzValue="{{item.PropertyItemCode}}"
+              nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row [nzGutter]="24" [hidden]="!show">
+    <div nz-col [nzSpan]="10">
+      <nz-form-item nzFlex>
+        <nz-form-label>颜色</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-select id="carColorId" name="carColor" formControlName="searchCarColor"
+            [(ngModel)]="carSearchFilter.carColor" nzShowSearch nzAllowClear nzPlaceHolder="请选择车身颜色">
+            <nz-option *ngFor="let item of carColorDropdownList" nzValue="{{item.PropertyItemCode}}"
+              nzLabel="{{item.PropertyItemText}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="14">
+      <nz-form-item nzFlex>
+        <nz-form-label>票据到期日</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <nz-range-picker id="billingEndDateRange" name="carBillingEndDateRange"
+            formControlName="searchCarBillingEndDateRange" [(ngModel)]="billingEndDateRange"
+            (ngModelChange)="changeBillingEndDate($event)"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area" [hidden]="!show">
+      <button nz-button [nzType]="'primary'" (click)="searchOnSaleCarList()">查询</button>
+      <button nz-button>清空</button>
+    </div>
+  </div>
+</form><br>
+<form nz-form [nzLayout]="'horizontal'" class="ant-advanced-search-form searchlist" [formGroup]="carSelectionForm"
+  *ngIf="preOrderingCar" (ngSubmit)="submitCarSelectionForm()">
+  <!-- 备选订购车辆 -->
+  <div *ngIf="preOrderingCar">
+    <!--品牌-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">品牌</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择品牌">
+        <input nz-input style="color: black" id="brandId" name="brand" formControlName="checkBrand"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.brand" nzPlaceHolder="请选择品牌" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车系-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车系</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车系">
+        <input nz-input style="color: black" id="seriesId" name="series" formControlName="checkSeries"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.carSeries" nzAllowClear nzPlaceHolder="请选择车系" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车型-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车型</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车型">
+        <input nz-input style="color: black" id="typeId" name="type" formControlName="checkType"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.carType" nzAllowClear nzPlaceHolder="请选择车型" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车型分类-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车型分类</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车型类别">
+        <input nz-input style="color: black" id="typeCodeId" name="typeCode" formControlName="checkTypeCode"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.carTypeCode" nzAllowClear nzPlaceHolder="请选择车型类别" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车辆型号-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车辆型号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车辆型号">
+        <input nz-input style="color: black" id="typeCategoryId" name="typeCategory" formControlName="checkTypeCategory"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.carTypeCategory" nzAllowClear nzPlaceHolder="请选择车辆型号" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--车身颜色-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">车身颜色</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车身颜色">
+        <input nz-input style="color: black" id="colorId" name="color" formControlName="checkColor"
+          [(ngModel)]="preOrderingCar.CarPropertyItemList.carColor" nzPlaceHolder="请选择车身颜色" />
+      </nz-form-control>
+    </nz-form-item>
+    <!--波箱方式-->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">发动机类型</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入发动机类型">
+        <input nz-input style="color: black" id="transmission" formControlName="checkTransmission" name="transmission"
+          placeholder="请输入发动机类型" [(ngModel)]="preOrderingCar.CarPropertyItemList.transmission" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 大架号 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">大架号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入大架号">
+        <input nz-input style="color: black" id="vinNumber" formControlName="checkVinNumber" name="vinNumber"
+          placeholder="请输入大架号" [(ngModel)]="preOrderingCar.CarVinNumber" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 发动机号 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">发动机号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入发动机号">
+        <input nz-input style="color: black" id="engineNumber" formControlName="checkEngineNumber" name="engineNumber"
+          placeholder="请输入发动机号" [(ngModel)]="preOrderingCar.CarEngineNumber" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 合格证号 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">合格证号</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入合格证号">
+        <input nz-input style="color: black" id="certificateNumber" formControlName="checkCertificateNumber"
+          name="certificateNumber" placeholder="请输入合格证号" [(ngModel)]="preOrderingCar.CertificateNumber" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 销售方式 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">销售方式</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车辆销售方式">
+          <nz-radio-group id="salesType" formControlName="checkSalesType" placeholder="请输入正确的车辆标准售价"
+            name="salesType" [(ngModel)]="orderingCar.salesType">
+            <label nz-radio nzValue="orderingSale">车辆预定</label>
+            <label nz-radio nzValue="wholeSale" style="margin-right: 20px">整车销售</label>
+          </nz-radio-group>
+        </nz-form-control>
+    </nz-form-item>
+    <!-- 付款方式 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">付款方式</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请选择车辆付款方式">
+          <nz-radio-group id="paymentType" formControlName="checkPaymentType" placeholder="请输入正确的车辆付款方式"
+            name="paymentType" [(ngModel)]="orderingCar.paymentType">
+            <label nz-radio nzValue=1>分期</label>
+            <label nz-radio nzValue=0 style="margin-right: 20px">全款</label>
+          </nz-radio-group>
+        </nz-form-control>
+    </nz-form-item>
+    <!-- 车辆起价 -->
+    <nz-form-item>
+      <nz-form-label nzRequired [nzSpan]="5">标准售价</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的车辆标准售价">
+        <input nz-input id="standardSellPrice" formControlName="checkStandardSellPrice" name="standardSellPrice"
+          placeholder="请输入正确的车辆标准售价" [(ngModel)]="orderingCar.carPrice" />
+      </nz-form-control>
+    </nz-form-item>
+    <!-- 车辆销售订金 -->
+    <nz-form-item *ngIf="orderingCar.salesType === 'orderingSale'">
+      <nz-form-label nzRequired [nzSpan]="5">销售订金</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="请输入正确的车辆销售订金">
+        <input nz-input id="orderPrice" formControlName="checkOrderPrice" name="orderPrice" placeholder="请输入正确的车辆销售订金"
+          [(ngModel)]="orderingCar.orderPrice" />
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" class="search-area">
+      <button nz-button [nzType]="'default'" (click)="reChoose()">
+        重选
+      </button>
+      <button nz-button [nzType]="'primary'" (click)="confirm()">
+        确认
+      </button>
+    </div>
+  </div>
+</form>
+
+
+<!-- 车辆筛选Modal -->
+<nz-modal [(nzVisible)]="isCarListModalVisible" [nzWidth]="800" [nzTitle]="modalTitle" [nzContent]="modalContent"
+  [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+  <ng-template #modalTitle>
+    车辆筛选列表
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-table #basicTable [nzData]="fetchedCarList" nzSize="middle">
+      <thead>
+        <tr>
+          <th></th>
+          <th>品牌</th>
+          <th>车系</th>
+          <th>车型</th>
+          <th>颜色</th>
+          <th>票据到期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of fetchedCarList">
+          <td>
+            <nz-radio-group [(ngModel)]="selectedCarId">
+              <label nz-radio [nzValue]="data.CarId"></label>
+            </nz-radio-group>
+          </td>
+          <td>{{ data.CarPropertyItemList.brand }}</td>
+          <td>{{ data.CarPropertyItemList.carSeries }}</td>
+          <td>{{ data.CarPropertyItemList.carType }}</td>
+          <td>{{ data.CarPropertyItemList.carColor }}</td>
+          <td>{{ data.BillingEndDate | timestampToDate}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">确认</button>
+  </ng-template>
+</nz-modal>

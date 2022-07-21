@@ -1,0 +1,168 @@
+<nz-layout class="layout">
+  <nz-header>
+    <div class="row">
+      <div [ngClass]="{'col-2': isHiddenBrandSelectionTool === false, 'col-4': isHiddenBrandSelectionTool === true}">
+        <p style="color:aliceblue" (click)="navigateTo('home')">CRM/ERP系统</p>
+      </div>
+      <div class="col-2" [hidden]="isHiddenBrandSelectionTool">
+        <nz-cascader [nzAllowClear]='false' [nzOptions]="branchOptions" [(ngModel)]="values" (ngModelChange)="onChangeSelectedBranch($event)"> </nz-cascader>
+      </div>
+      <div class="col-8">
+      <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+        <li nz-submenu nzTitle="消息通知"  nzIcon="alert">
+          <ul>
+            <li nz-menu-item>全部消息</li>
+            <li nz-menu-item>待处理消息  (1)</li>
+            <li nz-menu-item>已完成消息</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="个人中心" nzIcon="user">
+          <ul>
+            <li nz-menu-item (click)="navigateTo('personalInformation')">个人信息</li>
+            <li nz-menu-item (click)="logout()">登出系统</li>
+          </ul>
+        </li>
+      </ul>
+      </div>
+    </div>
+
+
+  </nz-header>
+  <nz-layout>
+    <nz-sider nzWidth="200px" nzTheme="light">
+      <ul nz-menu nzMode="inline" class="sider-menu">
+        <li nz-submenu 
+            [(nzOpen)]="openMap.sales"
+            (nzOpenChange)="openHandler('sales')"
+            nzTitle="销售业务" 
+            nzIcon="shopping">
+          <ul>
+            <li nz-menu-item (click)="navigateTo('customer')">新增订单</li>
+            <li nz-menu-item>订单管理</li>
+            <!-- <li nz-menu-item>option3</li>
+            <li nz-menu-item>option4</li> -->
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.afterSales"
+            (nzOpenChange)="openHandler('afterSales')"
+            nzTitle="售后业务" 
+            nzIcon="tool">
+          <ul>
+            <li nz-menu-item>车辆维修</li>
+            <li nz-menu-item>车辆保养</li>
+            <li nz-menu-item>车辆保险</li>
+            <!-- <li nz-menu-item>option8</li> -->
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.derivative"
+            (nzOpenChange)="openHandler('derivative')"
+            nzTitle="衍生业务" 
+            nzIcon="notification">
+          <ul>
+            <li nz-menu-item (click)="navigateTo('advancedProductSales')">精品购买</li>
+            <li nz-menu-item (click)="navigateTo('advancedManagement')">精品管理</li>
+            <!-- <li nz-menu-item>option11</li>
+            <li nz-menu-item>option12</li> -->
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.finance"
+            (nzOpenChange)="openHandler('finance')"
+            nzTitle="财务业务" 
+            nzIcon="calculator">
+          <ul>
+            <li nz-menu-item (click)="navigateTo('purchasingApproval')">采购审批</li>
+            <li nz-menu-item>财务核算</li>
+            <!-- <li nz-menu-item>option11</li>
+            <li nz-menu-item>option12</li> -->
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.administrator"
+            (nzOpenChange)="openHandler('administrator')"
+            nzTitle="行政业务" 
+            nzIcon="team">
+          <ul>
+            <li nz-menu-item>员工管理</li>
+            <li nz-menu-item>组织结构</li>
+            <!-- <li nz-menu-item>option11</li>
+            <li nz-menu-item>option12</li> -->
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.storeHouse"
+            (nzOpenChange)="openHandler('storeHouse')"
+            nzTitle="仓库业务" 
+            nzIcon="home">
+          <ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="商品采购" style="text-align: center">
+                <ul>
+                  <li nz-menu-item (click)="navigateTo('carPurchaseOrdering')">车辆采购</li>
+                  <li nz-menu-item>售后采购</li>
+                  <li nz-menu-item>精品采购</li>
+                </ul>
+              </li>
+            </ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="库存查看" style="text-align: center">
+                <ul>
+                  <li nz-menu-item>车辆库存</li>
+                  <li nz-menu-item>售后库存</li>
+                  <li nz-menu-item>精品库存</li>
+                </ul>
+              </li>
+            </ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="商品入库" style="text-align: center">
+                <ul>
+                  <li nz-menu-item (click)="navigateTo('carInformationImport')">车辆导入</li>
+                  <li nz-menu-item>售后备件导入</li>
+                  <li nz-menu-item>精品导入</li>
+                </ul>
+              </li>
+            </ul>
+          </ul>
+        </li>
+        <li nz-submenu 
+            [(nzOpen)]="openMap.systemSetting"
+            (nzOpenChange)="openHandler('systemSetting')"
+            nzTitle="系统管理" 
+            nzIcon="setting">
+          <ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="员工类别" style="text-align: center">
+                <ul>
+                  <li nz-menu-item (click)="navigateTo('userPermission')">用户权限</li>
+                  <li nz-menu-item (click)="navigateTo('userManagement')">用户管理</li>
+                </ul>
+              </li>
+            </ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="客户信息" style="text-align: center">
+                <ul>
+                  <li nz-menu-item (click)="navigateTo('customerManagement')">客户信息管理</li>
+                </ul>
+              </li>
+            </ul>
+            <ul nz-menu nzMode="vertical" class="header-menu">
+              <li nz-submenu nzTitle="车辆数据" style="text-align: center">
+                <ul>
+                  <li nz-menu-item (click)="navigateTo('carBasicInformationManagement')">基础数据管理</li>
+                  <li nz-menu-item (click)="navigateTo('carSellingPriceManagement')">基础售价管理</li>
+                </ul>
+              </li>
+            </ul>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout class="inner-layout">
+      <nz-breadcrumb>
+      </nz-breadcrumb>
+      <router-outlet></router-outlet>
+    </nz-layout>
+  </nz-layout>
+</nz-layout>
